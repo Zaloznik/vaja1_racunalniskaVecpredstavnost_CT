@@ -23,7 +23,7 @@ namespace vaja1_rv_wf
         {
             #region ReadColorPalete
             byte[,] barve_img = new byte[256, 3];
-            BinaryReader br = new BinaryReader(File.Open(@"D:\Sola\3. letnik\racunalniska vecpredstavnost\vaja1\vaja1_rv\vaja1_rv\bin\Debug\barvnePalete\topography.lut", FileMode.Open));
+            BinaryReader br = new BinaryReader(File.Open(@"D:\Sola\3. letnik\racunalniska vecpredstavnost\vaja1\vaja1_rv_wf\res\BarvnePalete\topography.lut", FileMode.Open));
 
             for (int i = 0; i < 256; i++)
             {
@@ -36,7 +36,7 @@ namespace vaja1_rv_wf
 
             #region ReadCT
             short[,] slika_img = new short[512, 512];
-            BinaryReader br2 = new BinaryReader(File.Open(@"D:\Sola\3. letnik\racunalniska vecpredstavnost\vaja1\vaja1_rv\vaja1_rv\bin\Debug\ctPosnetek\0219.img", FileMode.Open));
+            BinaryReader br2 = new BinaryReader(File.Open(@"D:\Sola\3. letnik\racunalniska vecpredstavnost\vaja1\vaja1_rv_wf\res\CT\0219.img", FileMode.Open));
             for (int i = 0; i < 512; i++)
             {
                 for (int j = 0; j < 512; j++)
@@ -65,12 +65,10 @@ namespace vaja1_rv_wf
 
             ctPictureBox.Image = pic;
 
-
-            //------------------------------------------------------------------------------------------------ OVU JE TEST
-            #region test
+            #region Test
 
 
-            int[,] img = {
+            int[,] imgR = {
                 { 127, 127, 0, 0, 195, 0, 255, 255 },
                 { 127, 127, 0, 0, 0, 127, 0, 0 },
                 { 0, 0, 0, 0, 79, 79, 0, 0 },
@@ -81,176 +79,17 @@ namespace vaja1_rv_wf
                 { 0, 0, 0, 0, 255, 255, 255, 255 }
             };
 
-            List<int> prviDel, drugiDel, tretjiDel, cetrtiDel;
-            prviDel = new List<int>();
+            string rezultat = "";
 
-            bool allesGut = true;
-            int barvaInt = -1;
-            for(int i=0;i<4;i++)
+            int prelomnica = Convert.ToInt32(Math.Sqrt(imgR.Length)) / 2;
+            
+            DelSlike prviDel = new DelSlike(imgR,Convert.ToInt32(Math.Sqrt(imgR.Length)));
+            prviDel.DivideImage();
+            foreach(var item in prviDel.Children)
             {
-                for(int j=0;j<3;j++)
-                {
-                    if (img[i,j] != img[i,j+1])
-                    {
-                        allesGut = false;
-                        break;
-                    }
-                    else
-                    {
-                        barvaInt = img[i,j];
-                    }
-                    Console.Write(img[i, j] + "\t");
-                }
-                Console.WriteLine("\n");
+                rezultat += item.checkDel();
             }
 
-            if(allesGut)
-            {
-                prviDel.Add(0);
-                string bit = Convert.ToString(barvaInt, 2).PadLeft(8, '0'); ;
-                for (int i = 0; i < bit.Length; i++)
-                {
-                    if (bit[i] == '1')
-                    {
-                        prviDel.Add(1);
-                    }
-                    else
-                    {
-                        prviDel.Add(0);
-                    }
-                }
-            }
-            else
-            {
-                prviDel.Add(1);
-            }
-
-            drugiDel = new List<int>();
-            allesGut = true;
-            for(int i=4;i<8;i++)
-            {
-                for (int j =0;j<3;j++)
-                {
-                    if (img[i, j] != img[i, j + 1])
-                    {
-                        allesGut=false;
-                        break;
-                    }
-                    else
-                    {
-                        barvaInt = img[i, j];
-                    }
-                    Console.Write(img[i, j] + "\t");
-                }
-                Console.WriteLine("\n");
-            }
-            if (allesGut)
-            {
-                drugiDel.Add(0);
-                string bit = Convert.ToString(barvaInt, 2).PadLeft(8,'0');
-                for (int i = 0; i < bit.Length; i++)
-                {
-                    if (bit[i] == '1')
-                    {
-                        drugiDel.Add(1);
-                    }
-                    else
-                    {
-                        drugiDel.Add(0);
-                    }
-                }
-            }
-            else
-            {
-                drugiDel.Add(1);
-            }
-
-            tretjiDel = new List<int>();
-            allesGut = true;
-            for(int i=0;i<4;i++)
-            {
-                for(int j=4;j<7;j++)
-                {
-                    if (img[i, j] != img[i, j + 1])
-                    {
-                        allesGut = false;
-                        break;
-                    }
-                    else
-                    {
-                        barvaInt = img[i, j];
-                    }
-                    Console.Write(img[i, j] + "\t");
-                }
-                Console.WriteLine("\n");
-            }
-            if (allesGut)
-            {
-                tretjiDel.Add(0);
-                string bit = Convert.ToString(barvaInt, 2).PadLeft(8, '0');
-                for (int i = 0; i < bit.Length; i++)
-                {
-                    if (bit[i] == '1')
-                    {
-                        tretjiDel.Add(1);
-                    }
-                    else
-                    {
-                        tretjiDel.Add(0);
-                    }
-                }
-            }
-            else
-            {
-                tretjiDel.Add(1);
-            }
-
-            cetrtiDel = new List<int>();
-            allesGut = true;
-            for (int i = 4; i < 8; i++)
-            {
-                for(int j=4;j<7;j++)
-                {
-                    if (img[i, j] != img[i, j + 1])
-                    {
-                        allesGut = false;
-                        break;
-                    }
-                    else
-                    {
-                        barvaInt = img[i, j];
-                    }
-                    Console.Write(img[i, j] + "\t");
-                }
-                Console.WriteLine("\n");
-            }
-            if (allesGut)
-            {
-                cetrtiDel.Add(0);
-                string bit = Convert.ToString(barvaInt, 2).PadLeft(8, '0');
-                for(int i = 0; i < bit.Length; i++)
-                {
-                    if (bit[i] == '1')
-                    {
-                        cetrtiDel.Add(1);
-                    }
-                    else
-                    {
-                        cetrtiDel.Add(0);
-                    }
-                }
-            }
-            else
-            {
-                cetrtiDel.Add(1);
-            }
-
-            List<int> together = new List<int>();
-            together.AddRange(prviDel);
-            together.AddRange(drugiDel);
-            together.AddRange(tretjiDel);
-            together.AddRange(cetrtiDel);
-            string stop = ";";
             #endregion
         }
     }
